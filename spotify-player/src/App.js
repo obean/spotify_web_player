@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import './App.css';
+import ControlBar from './components/controlBar.component.js'
 
 const redirectUri = "http://localhost:3000";
 const scopes = [
@@ -40,7 +41,6 @@ function App() {
 
   useEffect(() => {
     if(token) {
-      // using an interval as window.Spotify seems slow to mount/exist
       interval = setInterval(() => checkForPlayer(), 1000);
     }
   }, [token])
@@ -60,10 +60,7 @@ function App() {
       setPlayer(new window.Spotify.Player({
         name: "HomeHub Spotify Player",
         getOAuthToken: cb => cb(token)
-      }))
-
-   
-      
+      }))   
     }
   }
 
@@ -78,7 +75,9 @@ function App() {
             > Login to Spotify</a>  
         )}
         {token && (
-          <h3>{token}</h3>
+          <ControlBar 
+            player={player}
+          />  
         )}
   
       </header>

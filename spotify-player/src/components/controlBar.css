@@ -1,0 +1,29 @@
+#controlBar {
+  /* box-sizing: border-box;
+  width: 100px;
+  display: grid;
+  grid-template-columns: auto auto auto; */
+  display: grid;
+  grid-template-columns: auto auto auto;
+  background-color: #2196F3;
+  padding: 10px;
+  grid-column-gap: 50px;
+  height: 20px;
+  width:200px;
+  border: thin black;
+  border-end-end-radius: 5px;
+  align-content: center;
+  align-items: center;
+
+}
+
+.controlBar-button {
+  /* background-color: black; */
+  /* border: 1px solid rgba(0, 0, 0, 0.8);
+  padding: 20px; */
+  padding: 5px;
+  margin: 2px;
+  font-size: 30px;
+  text-align: center;
+  align-content: center;
+}
