@@ -6,6 +6,7 @@ const scopes = [
   "user-read-currently-playing",
   "user-read-playback-state",
 ];
+export const authEndpoint = 'https://accounts.spotify.com/authorize?'
 
 const hash = window.location.hash
   .substring(1)
@@ -21,13 +22,27 @@ const hash = window.location.hash
 window.location.hash = "";
 
 function App() {
+  const [token, setToken] = useState();
+
+  useEffect(() => {
+      let _token = hash.access_token;
+      console.log(hash.access_token)
+      if(_token) {
+        setToken(_token)
+        console.log(token)
+      }
+  })
+
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
+        {!token && (
+            <a
+              className="btn btn--loginApp-link"
+              href={`${authEndpoint}client_id=${process.env.REACT_APP_CLIENTID}&redirect_uri=${redirectUri}&scope=${scopes.join("%20")}&response_type=token&show_dialog=true`}
+            > Login to Spotify</a>  
+        )}
   
       </header>
     </div>
