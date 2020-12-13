@@ -60,7 +60,8 @@ function App() {
       setPlayer(new window.Spotify.Player({
         name: "HomeHub Spotify Player",
         getOAuthToken: cb => cb(token)
-      }))   
+      }
+      ))   
     }
   }
 

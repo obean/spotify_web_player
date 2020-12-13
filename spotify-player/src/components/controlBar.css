@@ -4,11 +4,13 @@
   display: grid;
   grid-template-columns: auto auto auto; */
   display: grid;
-  grid-template-columns: auto auto auto;
+  grid-template-areas:
+    'auto auto auto'
+    'slider slider slider';
   background-color: black;
   padding: 10px;
   grid-column-gap: 50px;
-  height: 1.2em;
+  height: 2em;
   widows: 250px;
   border: thin black;
   border-end-end-radius: 5px;
@@ -25,5 +27,16 @@
   margin: 2px;
   font-size: 30px;
   text-align: center;
+  grid-area: auto;
   /* align-content: 1em 1em 1em 1em; */
+}
+
+.controlBar-slider {
+  grid-area:slider;
+  width: 100%;
+}
+
+#volume-slider {
+  border: thin white;
+  outline-color: azure;
 }

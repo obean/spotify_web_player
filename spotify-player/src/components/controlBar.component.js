@@ -2,7 +2,19 @@ import React, { useState, useEffect, useRef } from "react";
 import './controlBar.css'
 import {FaPauseCircle, FaPlayCircle, FaArrowAltCircleLeft, FaArrowAltCircleRight } from 'react-icons/fa';
 function ControlBar(props) {
-  const [isPlaying, setIsPlaying] = useState()
+  const [isPlaying, setIsPlaying] = useState();
+  const [volume, setVolume] = useState(100);
+
+  // useEffect(() => {
+  //   const getVolume = async () => {
+  //     const data = await  props.player.getVolume()
+  //                                     .then(data => setVolume(data) )
+  //                                     .then(console.log(volume))
+  //   }
+  //   getVolume();
+  // }, [props.player] )
+
+
 
   let interval = useRef();
 
@@ -33,6 +45,11 @@ function ControlBar(props) {
                 .then(() => console.log("previous track "))
   }
 
+  const setPlayerVolume = event => {
+    props.player.setVolume(event.target.value/100)
+    setVolume(event.target.value)
+  }
+
 
   return(
     <div id="controlBar">
@@ -41,6 +58,15 @@ function ControlBar(props) {
                  : <div class="controlBar-button"> <FaPlayCircle onClick={() => resumePlayer()}/> </div>
       }
       <div class="controlBar-button"> <FaArrowAltCircleRight onClick={() => nextTrack()}/> </div>
+      <div class="controlBar-slider">
+        <input type="range"
+               class="slider"
+               id="volume-slider"
+               value={volume} 
+               onChange={(event) => setPlayerVolume(event)} 
+               min="0" max="100" 
+        />
+      </div>
     </div>
   )
 }
