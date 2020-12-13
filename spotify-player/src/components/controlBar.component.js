@@ -1,14 +1,20 @@
 import React, { useState, useEffect, useRef } from "react";
 import './controlBar.css'
 import  pauseButton  from '../controlBarButtons/pauseButton.png'
-import {FaPauseCircle, FaArrowAltCircleLeft, FaArrowAltCircleRight } from 'react-icons/fa';
+import {FaPauseCircle, FaPlayCircle, FaArrowAltCircleLeft, FaArrowAltCircleRight } from 'react-icons/fa';
 function ControlBar(props) {
-  const [isPlaying, setIsPlaying] = useState(false)
+  const [isPlaying, setIsPlaying] = useState()
 
   const pausePlayer = () => {
     props.player.pause()
                 .then(() => setIsPlaying(false))
                 .then(() => console.log("playback paused"))
+  }
+
+  const resumePlayer = () => {
+    props.player.pause()
+                .then(() => setIsPlaying(true))
+                .then(() => console.log("playback resumed"))
   }
 
 
@@ -17,7 +23,12 @@ function ControlBar(props) {
       <div class="controlBar-button">
       <FaArrowAltCircleLeft/>
       </div>
-      <div class="controlBar-button"> <FaPauseCircle/> </div>
+      {isPlaying && (
+      <div class="controlBar-button"> <FaPauseCircle onClick={() => pausePlayer()}/> </div>
+      )}
+      {!isPlaying && (
+        <div class="controlBar-button"> <FaPlayCircle onClick={() => resumePlayer()}/> </div>
+       )}
       <div class="controlBar-button"> <FaArrowAltCircleRight/> </div>
     </div>
   )
