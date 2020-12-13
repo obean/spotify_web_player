@@ -85,7 +85,7 @@ function App() {
     await fetch(`https://api.spotify.com/v1/me/player`,{ //    id=${player._options.id}`, {
       method: "PUT",
       headers: {
-        'Authorization':  "Bearer " + token
+        'Authorization':  "Bearer " + token,
       }, 
       body: JSON.stringify({
         "device_ids": [
@@ -114,9 +114,6 @@ function App() {
           </div>  
           
         )}
-        {/* {devices > 0 && (
-        devices.map(device =>  {return <h3> {device.id}: {device.name} </h3>})
-        )} */}
       </header>
     </div>
   );

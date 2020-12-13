@@ -1,0 +1,2 @@
+REACT_APP_CLIENTID = "client id goes here"
+REACT_APP_CLIENTSECRET = "client secret goes here"
