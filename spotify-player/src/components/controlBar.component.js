@@ -3,7 +3,13 @@ import './controlBar.css'
 import  pauseButton  from '../controlBarButtons/pauseButton.png'
 import {FaPauseCircle, FaArrowAltCircleLeft, FaArrowAltCircleRight } from 'react-icons/fa';
 function ControlBar(props) {
+  const [isPlaying, setIsPlaying] = useState(false)
 
+  const pausePlayer = () => {
+    props.player.pause()
+                .then(() => setIsPlaying(false))
+                .then(() => console.log("playback paused"))
+  }
 
 
   return(
