@@ -6,6 +6,7 @@ const redirectUri = "http://localhost:3000";
 const scopes = [
   "user-read-currently-playing",
   "user-read-playback-state",
+  "user-modify-playback-state",
 ];
 export const authEndpoint = 'https://accounts.spotify.com/authorize?'
 
@@ -27,6 +28,7 @@ window.location.hash = "";
 function App() {
   const [token, setToken] = useState();
   const [player, setPlayer] = useState();
+  const [devices, setDevices] = useState([]);
 
   let interval = useRef();
 
@@ -42,6 +44,7 @@ function App() {
   useEffect(() => {
     if(token) {
       interval = setInterval(() => checkForPlayer(), 1000);
+
     }
   }, [token])
   
@@ -64,6 +67,33 @@ function App() {
       ))   
     }
   }
+    
+  //below function for getting all devices currently activated on the spotify user account. Not currently needed but returns correct information. 
+
+  // const getCurrentDevices = async () => {
+  //  const activeDevices = await fetch('https://api.spotify.com/v1/me/player/devices', {
+  //     headers: {
+  //       "Authorization": "Bearer " + token 
+  //     }
+  //   }).then(activeDevices => activeDevices.json())
+  //     .then(activeDevices =>  setDevices(activeDevices.devices))
+  //     .then(  console.log(devices))
+  // }
+
+  const setActivePlayer = async () => {
+    console.log(devices)
+    await fetch(`https://api.spotify.com/v1/me/player`,{ //    id=${player._options.id}`, {
+      method: "PUT",
+      headers: {
+        'Authorization':  "Bearer " + token
+      }, 
+      body: JSON.stringify({
+        "device_ids": [
+          "137c510a442d23d27ad158d9231a7e788983773c"
+        ]
+      })
+    })
+  }
 
 
   return (
@@ -76,11 +106,17 @@ function App() {
             > Login to Spotify</a>  
         )}
         {token && (
-          <ControlBar 
-            player={player}
-          />  
+          <div id="player-frame">
+            <ControlBar 
+              player={player}
+            />  
+            <button onClick={() => setActivePlayer() }>play through this device</button>  {/* button for development only, enables you to set current playback to this browser, rather than selecting this browser on another device.*/}
+          </div>  
+          
         )}
-  
+        {/* {devices > 0 && (
+        devices.map(device =>  {return <h3> {device.id}: {device.name} </h3>})
+        )} */}
       </header>
     </div>
   );
