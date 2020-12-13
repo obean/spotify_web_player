@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import './controlBar.css'
-import  pauseButton  from '../controlBarButtons/pauseButton.png'
 import {FaPauseCircle, FaPlayCircle, FaArrowAltCircleLeft, FaArrowAltCircleRight } from 'react-icons/fa';
 function ControlBar(props) {
   const [isPlaying, setIsPlaying] = useState()
@@ -27,12 +26,15 @@ function ControlBar(props) {
                 .then(() => console.log("track skipped"))
   }
 
+  const previousTrack = () => {
+    props.player.previousTrack() 
+                .then(() => console.log("previous track "))
+  }
+
 
   return(
     <div id="controlBar">
-      <div class="controlBar-button">
-      <FaArrowAltCircleLeft/>
-      </div>
+      <div class="controlBar-button"> <FaArrowAltCircleLeft onClick={previousTrack}/> </div>
       {isPlaying && (
       <div class="controlBar-button"> <FaPauseCircle onClick={() => pausePlayer()}/> </div>
       )}
