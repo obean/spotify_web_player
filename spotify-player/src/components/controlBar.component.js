@@ -4,6 +4,8 @@ import {FaPauseCircle, FaPlayCircle, FaArrowAltCircleLeft, FaArrowAltCircleRight
 function ControlBar(props) {
   const [isPlaying, setIsPlaying] = useState()
 
+  let interval = useRef();
+
   const pausePlayer = () => {
     props.player.pause()
                 .then(() => setIsPlaying(false))
@@ -35,12 +37,9 @@ function ControlBar(props) {
   return(
     <div id="controlBar">
       <div class="controlBar-button"> <FaArrowAltCircleLeft onClick={previousTrack}/> </div>
-      {isPlaying && (
-      <div class="controlBar-button"> <FaPauseCircle onClick={() => pausePlayer()}/> </div>
-      )}
-      {!isPlaying && (
-        <div class="controlBar-button"> <FaPlayCircle onClick={() => resumePlayer()}/> </div>
-       )}
+      {isPlaying ? <div class="controlBar-button"> <FaPauseCircle onClick={() => pausePlayer()}/> </div> 
+                 : <div class="controlBar-button"> <FaPlayCircle onClick={() => resumePlayer()}/> </div>
+      }
       <div class="controlBar-button"> <FaArrowAltCircleRight onClick={() => nextTrack()}/> </div>
     </div>
   )
