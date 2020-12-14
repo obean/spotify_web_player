@@ -8,6 +8,7 @@ const scopes = [
   "user-read-currently-playing",
   "user-read-playback-state",
   "user-modify-playback-state",
+  "playlist-read-private"
 ];
 export const authEndpoint = 'https://accounts.spotify.com/authorize?'
 
@@ -116,7 +117,7 @@ function App() {
               player={player}
             />  
           {player &&( 
-            <button onClick={() => {setActivePlayer(); console.log(player);} }>play through this device</button>  /* button for development only, enables you to set current playback to this browser, rather than selecting this browser on another device.*/
+            <button onClick={() => {setActivePlayer();} }>play through this device</button>  /* button for development only, enables you to set current playback to this browser, rather than selecting this browser on another device.*/
           )}
             </div>  
           </div>

@@ -3,52 +3,67 @@ import React, { useState, useEffect, useRef } from "react";
 function MusicInformation(props)  {
   const [nowPlaying, setNowPlaying] = useState({ 
     album: {
-      images: [{ url: ""}, { url: "" }] 
+      images: [
+        { url: ""}, 
+        { url: "" }
+      ] 
     },
     name: "",
-    artists: [{ name: "" }],
-    duration_ms: 0
+    artists: [
+      { name: "" }
+    ],
+    duration_ms: 0,
+    id: ''
   });
+
   const [currentPlayer, setCurrentPlayer] = useState({
     name: "",
     id: ""
+  });
+
+  let interval = useRef();
+
+  const waitForPlayerUpdates = () => {
+    props.player.on('player_state_changed', state => {
+      console.log(state.track_window.current_track.name)
+      console.log(nowPlaying.name)
+      if(state.track_window.current_track.name !== nowPlaying.name) {
+        console.log("we changin")
+      }
+    })
+  }  
+
+  const followExternalPlayer = () => {
+    clearInterval(interval)
+    interval = setInterval(() => {
+      getCurrentlyPlaying()}
+      , 5000)
   }
-  );
 
 
-  // useEffect(() => {
-  //   if(props.token){
-  //     getCurrentlyPlaying();
-  //   }
-  // }, [props.token])
 
   const getCurrentlyPlaying =   async  () => {
-    console.log("here is the token: " + props.token) 
     const data = await fetch("https://api.spotify.com/v1/me/player",{
       headers: {
         'Content-Type': 'application/json',
         'Authorization': "Bearer " + props.token
       }
-    }
-  
-    ).then((data) => { data.status === 200 ? playerIsLive(data) : console.log("nothing is playing") })
-     
+    }).then((data) => { data.status === 200 ? playerIsLive(data) : console.log("nothing is playing") })  
   }
 
   const playerIsLive = async (data) => {
     const parsedData = await data.json()
-    console.log(await parsedData)
-    console.log( parsedData.device.name)
-    console.log(props.player._options.name)
     if( parsedData.device.id !== props.player._options.id) {
       setNowPlaying( parsedData.item)
       setCurrentPlayer(parsedData.device)
-      console.log(`playing on  ${parsedData.device.name}`)
+      followExternalPlayer()
     }else {
-      // setCurrentPlayer
-      console.log("playing here!")
+      clearInterval(interval)
+      waitForPlayerUpdates();
+      setCurrentPlayer(parsedData.device);
+      setNowPlaying( parsedData.item);
+      
     }
-    console.log(nowPlaying)
   }
 
 return (  
