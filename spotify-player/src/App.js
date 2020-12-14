@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import './App.css';
 import ControlBar from './components/controlBar.component.js'
+import MusicInformation from './components/musicInformation.component.js'
 
 const redirectUri = "http://localhost:3000";
 const scopes = [
@@ -81,7 +82,6 @@ function App() {
   // }
 
   const setActivePlayer = async () => {
-    console.log(devices)
     await fetch(`https://api.spotify.com/v1/me/player`,{ //    id=${player._options.id}`, {
       method: "PUT",
       headers: {
@@ -89,7 +89,7 @@ function App() {
       }, 
       body: JSON.stringify({
         "device_ids": [
-          "137c510a442d23d27ad158d9231a7e788983773c"
+          player._options.id
         ]
       })
     })
@@ -106,12 +106,20 @@ function App() {
             > Login to Spotify</a>  
         )}
         {token && (
+          <div class="player-widget">
+          <MusicInformation 
+            player={player}
+            token={token}
+          />
           <div id="player-frame">
             <ControlBar 
               player={player}
             />  
-            <button onClick={() => setActivePlayer() }>play through this device</button>  {/* button for development only, enables you to set current playback to this browser, rather than selecting this browser on another device.*/}
-          </div>  
+          {player &&( 
+            <button onClick={() => {setActivePlayer(); console.log(player);} }>play through this device</button>  /* button for development only, enables you to set current playback to this browser, rather than selecting this browser on another device.*/
+          )}
+            </div>  
+          </div>
           
         )}
       </header>
