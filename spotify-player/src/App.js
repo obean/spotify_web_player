@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import './App.css';
 import ControlBar from './components/controlBar.component.js'
 import MusicInformation from './components/musicInformation.component.js'
+import Playlister from './components/Playlister.component.js'
+import useQuickFindModals from './components/useQuickFindModals.js'
 
 const redirectUri = "http://localhost:3000";
 const scopes = [
@@ -31,6 +33,7 @@ function App() {
   const [token, setToken] = useState();
   const [player, setPlayer] = useState();
   const [devices, setDevices] = useState([]);
+  const {playlisterShowing, togglePlaylister} = useQuickFindModals();
 
   let interval = useRef();
 
@@ -106,6 +109,8 @@ function App() {
               href={`${authEndpoint}client_id=${process.env.REACT_APP_CLIENTID}&redirect_uri=${redirectUri}&scope=${scopes.join("%20")}&response_type=token&show_dialog=true`}
             > Login to Spotify</a>  
         )}
+      </header>  
+      <body className="App-body">
         {token && (
           <div class="player-widget">
           <MusicInformation 
@@ -117,13 +122,20 @@ function App() {
               player={player}
             />  
           {player &&( 
-            <button onClick={() => {setActivePlayer();} }>play through this device</button>  /* button for development only, enables you to set current playback to this browser, rather than selecting this browser on another device.*/
+            <div>
+              <button onClick={() => {setActivePlayer();} }>play through this device</button>  {/* button for development only, enables you to set current playback to this browser, rather than selecting this browser on another device.*/}
+              <button onClick={togglePlaylister}> Quick play playlists</button>
+              <Playlister 
+                playlisterShowing={playlisterShowing}
+                hide={togglePlaylister}
+              />
+            </div>
           )}
             </div>  
           </div>
           
         )}
-      </header>
+      </body>
     </div>
   );
 }
