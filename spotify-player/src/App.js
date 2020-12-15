@@ -72,6 +72,23 @@ function App() {
       ))   
     }
   }
+
+  const playPlaylist = (uri, offset =0) => {
+    fetch('https://api.spotify.com/v1/me/player/play',{
+      method: "PUT",
+      headers: {
+        "Authorization": "Bearer " + token
+      },
+      body: 
+      JSON.stringify({
+        "context_uri": uri,
+        "offset": offset
+      }) 
+      
+
+      
+    })
+  }
     
   //below function for getting all devices currently activated on the spotify user account. Not currently needed but returns correct information. 
 
@@ -128,6 +145,8 @@ function App() {
               <Playlister 
                 playlisterShowing={playlisterShowing}
                 hide={togglePlaylister}
+                token={token}
+                playPlaylist={playPlaylist}
               />
             </div>
           )}
