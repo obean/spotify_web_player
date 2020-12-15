@@ -3,10 +3,10 @@ import ReactDOM from 'react-dom';
 
 const samplePlaylists = ["christmas songs", "gym songs", "music to cry in the shower too"]
 
-const Playlister = ({ playlisterShowing, hide, token, playPlaylist }) => { 
+const Playlister = ({ playlisterShowing, hide, token, playPlaylist, playPlaylistWithStartPoint}) => { 
   const [playlists, setPlaylists] = useState([{}]);
   const [currentPlaylist, setCurrentPlaylist] = useState();
-  const [currentPlaylistId, setCurrentPlaylistId] = useState("")
+  const [currentPlaylistUri, setCurrentPlaylistUri] = useState("")
 
   useEffect(() => {
     getPlaylists()
@@ -52,7 +52,7 @@ const Playlister = ({ playlisterShowing, hide, token, playPlaylist }) => {
                   <div>
                     {playlists[1] && !currentPlaylist && (playlists.map(playlist => 
                       <p className="playlistName">
-                        <span>{playlist.name}</span> <button onClick={() => playPlaylist(playlist.uri)}>play</button><button onClick={() => getPlaylistTracks(playlist.id)}>view songs</button>
+                        <span>{playlist.name}</span> <button onClick={() => playPlaylist(playlist.uri)}>play</button><button onClick={() => {getPlaylistTracks(playlist.id); setCurrentPlaylistUri(playlist.uri)}}>view songs</button>
                       </p>)
                     )}
                     {currentPlaylist && (
@@ -61,7 +61,7 @@ const Playlister = ({ playlisterShowing, hide, token, playPlaylist }) => {
                             
                            <p className="song">
                              <span>{song.track.name} by {song.track.artists[0].name}</span>
-                             <button  > play </button>
+                             <button onClick={() => playPlaylistWithStartPoint(currentPlaylistUri, song.track.uri)}> play </button>
                             {/*  <button onClick={() => playPlaylist(currentPlaylist.uri, currentPlaylist.indexOf(song))} > play </button> */ }
                            </p>
                         )}

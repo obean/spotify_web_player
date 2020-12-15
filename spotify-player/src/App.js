@@ -73,7 +73,19 @@ function App() {
     }
   }
 
-  const playPlaylist = (uri, offset =0) => {
+  const playPlaylist = (uri) => {
+    fetch('https://api.spotify.com/v1/me/player/play',{
+      method: "PUT",
+      headers: {
+        "Authorization": "Bearer " + token
+      },
+      body: 
+      JSON.stringify({
+        "context_uri": uri
+      })    
+    })
+  }
+  const playPlaylistWithStartPoint = (uri, offset) => {
     fetch('https://api.spotify.com/v1/me/player/play',{
       method: "PUT",
       headers: {
@@ -82,7 +94,9 @@ function App() {
       body: 
       JSON.stringify({
         "context_uri": uri,
-        "offset": offset
+        "offset": {
+          "uri": offset
+        },
       })    
     })
   }
@@ -146,6 +160,7 @@ function App() {
                 hide={togglePlaylister}
                 token={token}
                 playPlaylist={playPlaylist}
+                playPlaylistWithStartPoint={playPlaylistWithStartPoint}
               />
             </div>
           )}
