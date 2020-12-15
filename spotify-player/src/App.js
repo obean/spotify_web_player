@@ -83,12 +83,11 @@ function App() {
       JSON.stringify({
         "context_uri": uri,
         "offset": offset
-      }) 
-      
-
-      
+      })    
     })
   }
+
+
     
   //below function for getting all devices currently activated on the spotify user account. Not currently needed but returns correct information. 
 

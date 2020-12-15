@@ -5,6 +5,8 @@ const samplePlaylists = ["christmas songs", "gym songs", "music to cry in the sh
 
 const Playlister = ({ playlisterShowing, hide, token, playPlaylist }) => { 
   const [playlists, setPlaylists] = useState([{}]);
+  const [currentPlaylist, setCurrentPlaylist] = useState();
+  const [currentPlaylistId, setCurrentPlaylistId] = useState("")
 
   useEffect(() => {
     getPlaylists()
@@ -18,13 +20,23 @@ const Playlister = ({ playlisterShowing, hide, token, playPlaylist }) => {
     }).then(async data => {
        let parsedData =  await data.json()
        setPlaylists(parsedData.items)
-       console.log(parsedData.items)
+       console.log(playlists)
     })
-      
-
-     
   }
 
+  const getPlaylistTracks = async (playlist_id) => {
+    const data = await fetch(`https://api.spotify.com/v1/playlists/${playlist_id}/tracks`, {
+      headers: {
+        "Authorization": "Bearer " + token
+      }
+    }).then(async data => {
+      let parsedData = await data.json()
+      setCurrentPlaylist(parsedData)
+      console.log(currentPlaylist)
+      console.log(parsedData)
+    })
+  }
+  if(currentPlaylist){console.log("theres a playlist :/")}
   if(playlisterShowing) { 
     return (
       ReactDOM.createPortal(
@@ -38,10 +50,22 @@ const Playlister = ({ playlisterShowing, hide, token, playPlaylist }) => {
                     </button>
                   </div>
                   <div>
-                    {playlists[1] && playlists.map(playlist => 
+                    {playlists[1] && !currentPlaylist && (playlists.map(playlist => 
                       <p className="playlistName">
-                        <span>{playlist.name}</span> <button onClick={() => playPlaylist(playlist.uri)}>play</button><button>view songs</button>
-                      </p>
+                        <span>{playlist.name}</span> <button onClick={() => playPlaylist(playlist.uri)}>play</button><button onClick={() => getPlaylistTracks(playlist.id)}>view songs</button>
+                      </p>)
+                    )}
+                    {currentPlaylist && (
+                      <div className="playlist-songs">
+                        {currentPlaylist.items.map(song => 
+                            
+                           <p className="song">
+                             <span>{song.track.name} by {song.track.artists[0].name}</span>
+                             <button  > play </button>
+                            {/*  <button onClick={() => playPlaylist(currentPlaylist.uri, currentPlaylist.indexOf(song))} > play </button> */ }
+                           </p>
+                        )}
+                      </div>
                     )}
                   </div>
                 </div>
