@@ -6,22 +6,32 @@ const samplePlaylists = ["christmas songs", "gym songs", "music to cry in the sh
 const Playlister = ({ playlisterShowing, hide, token, playPlaylist, playPlaylistWithStartPoint}) => { 
   const [playlists, setPlaylists] = useState([{}]);
   const [currentPlaylist, setCurrentPlaylist] = useState();
-  const [currentPlaylistUri, setCurrentPlaylistUri] = useState("")
+  const [currentPlaylistUri, setCurrentPlaylistUri] = useState("");
+  const [searchOffset, setOffset] = useState(20);
+  
 
   useEffect(() => {
     getPlaylists()
   },[])
 
-  const getPlaylists = async () => {
-    const data =  await fetch('https://api.spotify.com/v1/me/playlists', {
+  const getPlaylists = async (offset = 0) => {
+    const data =  await fetch(`https://api.spotify.com/v1/me/playlists?offset=${offset}`, {
       headers: {
         "Authorization": "Bearer " + token
       }
     }).then(async data => {
        let parsedData =  await data.json()
-       setPlaylists(parsedData.items)
-       console.log(playlists)
+       offset === 0 ? setPlaylists(parsedData.items) : setPlaylists(playlists.concat(parsedData.items))
     })
+    
+  }
+
+  // const getMorePlaylists = async () => {
+  //   const data = await fetch
+  // }
+
+  const expandPlaylistSearch = async () => {
+    const data = getPlaylistTracks(searchOffset)
   }
 
   const getPlaylistTracks = async (playlist_id) => {
@@ -53,9 +63,21 @@ const Playlister = ({ playlisterShowing, hide, token, playPlaylist, playPlaylist
                   <div>
                     {playlists[1] && !currentPlaylist && (playlists.map(playlist => 
                       <p className="playlistName">
-                        <span>{playlist.name}</span> <button onClick={() => playPlaylist(playlist.uri)}>play</button><button onClick={() => {getPlaylistTracks(playlist.id); setCurrentPlaylistUri(playlist.uri)}}>view songs</button>
-                      </p>)
+                        <span>{playlist.name}</span>
+                        <button onClick={() => playPlaylist(playlist.uri)}>play</button>
+                        <button onClick={() => {getPlaylistTracks(playlist.id); setCurrentPlaylistUri(playlist.uri)}}>view songs</button>
+                      </p>)  
+                      
+                    )
+
+                    }
+                    {playlists[1] && !currentPlaylist && (
+                    <div>
+                    <button onClick={() => { setOffset(searchOffset + 20); getPlaylists(searchOffset)}}>More</button>
+                    <button onClick={() => {setPlaylists(playlists.splice(-20)); setOffset(searchOffset - 20)}}>Less</button>
+                    </div>
                     )}
+                  
                     {currentPlaylist && (
                       <div className="playlist-songs">
                         {currentPlaylist.items.map(song => 
@@ -63,9 +85,9 @@ const Playlister = ({ playlisterShowing, hide, token, playPlaylist, playPlaylist
                            <p className="song">
                              <span>{song.track.name} by {song.track.artists[0].name}</span>
                              <button onClick={() => playPlaylistWithStartPoint(currentPlaylistUri, song.track.uri)}> play </button>
-                            {/*  <button onClick={() => playPlaylist(currentPlaylist.uri, currentPlaylist.indexOf(song))} > play </button> */ }
                            </p>
                         )}
+                       
                       </div>
                     )}
                   </div>
