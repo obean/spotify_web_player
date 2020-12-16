@@ -6,6 +6,9 @@
 - next track/previous track controls.
 - pause track/resume track controls.
 - Volume controls
+- view your playlists, select one to play or view the songs in one. 
+- search songs, artists, albums (no play button yet)
+- view information on the currently playing song. 
 
 
 ## If you want to try it in its current state: 
