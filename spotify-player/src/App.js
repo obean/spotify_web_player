@@ -4,6 +4,7 @@ import ControlBar from './components/controlBar.component.js'
 import MusicInformation from './components/musicInformation.component.js'
 import Playlister from './components/Playlister.component.js'
 import useQuickFindModals from './components/useQuickFindModals.js'
+import Searcher from './components/Searcher.component.js'
 
 const redirectUri = "http://localhost:3000";
 const scopes = [
@@ -25,7 +26,7 @@ const hash = window.location.hash
       initial[parts[0]] = decodeURIComponent(parts[1]);
     }
     return initial;
-  }, {});
+}, {});
 
 window.location.hash = "";
 
@@ -33,7 +34,7 @@ function App() {
   const [token, setToken] = useState();
   const [player, setPlayer] = useState();
   const [devices, setDevices] = useState([]);
-  const {playlisterShowing, togglePlaylister} = useQuickFindModals();
+  const {playlisterShowing, togglePlaylister, searcherShowing, toggleSearcher} = useQuickFindModals();
 
   let interval = useRef();
 
@@ -155,12 +156,18 @@ function App() {
             <div>
               <button onClick={() => {setActivePlayer();} }>play through this device</button>  {/* button for development only, enables you to set current playback to this browser, rather than selecting this browser on another device.*/}
               <button onClick={togglePlaylister}> Quick play playlists</button>
+              <button onClick={toggleSearcher}> Searcher</button>
               <Playlister 
                 playlisterShowing={playlisterShowing}
                 hide={togglePlaylister}
                 token={token}
                 playPlaylist={playPlaylist}
                 playPlaylistWithStartPoint={playPlaylistWithStartPoint}
+              />
+              <Searcher 
+                searcherShowing={searcherShowing}
+                hide={toggleSearcher}
+                token={token}
               />
             </div>
           )}
