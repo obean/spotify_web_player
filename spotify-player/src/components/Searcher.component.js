@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 
 const Searcher = ({ searcherShowing, hide, token,}) => {
   const [searchValue, setSearchValue] = useState("");
-  const [resultToDisplay, setResultToDisplay] = useState("tracks")
+  const [resultToDisplay, setResultToDisplay] = useState()
   const [artistSearchResults, setArtistSearchResults] = useState()
   const [albumSearchResults, setAlbumSearchResults] = useState()
   const [trackSearchResults, setTrackSearchResults] = useState()
@@ -27,11 +27,12 @@ const Searcher = ({ searcherShowing, hide, token,}) => {
         }
       }).then(async data => {
         let parsedData = await data.json();
-        setAlbumSearchResults(parsedData.albums)
-        setArtistSearchResults(parsedData.artists)
+        setAlbumSearchResults(parsedData.albums.items)
+        setArtistSearchResults(parsedData.artists.items)
         setTrackSearchResults(parsedData.tracks.items)
-        console.log(parsedData.tracks.items)
-        console.log(trackSearchResults)
+        setResultToDisplay("tracks")
+        console.log(parsedData.artists)
+        console.log(artistSearchResults)
       })
     }
   }
@@ -44,13 +45,25 @@ const Searcher = ({ searcherShowing, hide, token,}) => {
               <div className="modal-wrapper" aria-modal aria-hidden tabIndex={-1} role="dialog">
                 <div className="modal">
                   <div className="modal-header">
-                    {(artistSearchResults || albumSearchResults || trackSearchResults) && (
-                      <div classNAme="filterSearch">
-                        <button>albums</button>
-                        <button>Artists</button>
-                        <button>tracks</button>
+                      {resultToDisplay == "tracks" && (
+                        <div classNAme="filterSearch">
+                        <button onClick={() => setResultToDisplay("albums")}>albums</button>
+                        <button onClick={() => setResultToDisplay("artists")}>Artists</button>
                       </div>
-                    )}
+                      )}
+                      {resultToDisplay === "artists" && (
+                        <div classNAme="filterSearch">
+                        <button onClick={() => setResultToDisplay("albums")}>albums</button>
+                        <button onClick={() => setResultToDisplay("tracks")}>tracks</button>
+                      </div>
+                      )}
+                      {resultToDisplay === "albums" && (
+                        <div classNAme="filterSearch">
+                        <button onClick={() => setResultToDisplay("artists")}>Artists</button>
+                        <button onClick={() => setResultToDisplay("tracks")}>tracks</button>
+                      </div>
+                      )}
+                   
                    <form >
                      <input type="text" value={searchValue} placeholder="Search Spotify..." onChange={e => {setSearchValue(e.target.value)}}/>
                    </form>
@@ -59,20 +72,47 @@ const Searcher = ({ searcherShowing, hide, token,}) => {
                     </button>
                   </div>
                   <div>
-                  {trackSearchResults && (
-                    <div className="track-search-results">
-                       {trackSearchResults.map(song => 
-                            
-                        <p className="song">
-                          <span>{song.name} by {song.artists[0].name}</span>
-                          {/* <button onClick={() => playPlaylistWithStartPoint(currentPlaylistUri, song.track.uri)}> play </button> */}
-                         {/*  <button onClick={() => playPlaylist(currentPlaylist.uri, currentPlaylist.indexOf(song))} > play </button> */ }
-                        </p>
-                     )}
-                     </div>
-                        
-
-                    
+                  {resultToDisplay == "tracks" && (
+                    <div className="search-result">
+                      <div className="result-type">
+                        <h2>{resultToDisplay}</h2>
+                      </div>
+                      <div className="track-search-results">
+                        {trackSearchResults.map(song => 
+                            <p className="song">
+                              <span>{song.name} by {song.artists[0].name}</span>
+                            </p>
+                        )}
+                      </div>
+                    </div>  
+                  )}
+                  {resultToDisplay == "artists" && (
+                    <div className="search-result">
+                      <div className="result-type">
+                        <h2>{resultToDisplay}</h2>
+                      </div>
+                      <div className="track-search-results">
+                        {artistSearchResults.map(artist => 
+                          <p className="song">
+                            <span>{artist.name}</span>
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                  {resultToDisplay == "albums" && (
+                    <div className="search-result">
+                      <div className="result-type">
+                        <h2>{resultToDisplay}</h2>
+                      </div>
+                      <div className="search-results">
+                        {albumSearchResults.map(album => 
+                          <p className="song">
+                            <span>{album.name} by {album.artists[0].name}</span>
+                          </p>
+                        )}
+                      </div>
+                    </div>
                   )}
                   </div>
                 </div>
