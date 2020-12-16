@@ -2,30 +2,38 @@ import React, {useEffect, useState, useRef} from "react";
 import ReactDOM from 'react-dom';
 
 const Searcher = ({ searcherShowing, hide, token,}) => {
-  const [searchValue, setSearchValue] = useState("")
+  const [searchValue, setSearchValue] = useState("");
+  const [resultToDisplay, setResultToDisplay] = useState("tracks")
+  const [artistSearchResults, setArtistSearchResults] = useState()
+  const [albumSearchResults, setAlbumSearchResults] = useState()
+  const [trackSearchResults, setTrackSearchResults] = useState()
 
-  const handleSubmit = () => {
 
-  }
 
   useEffect(() => {
     let timeout = setTimeout(() => {
-      console.log("make search")
-      
-    }, 1000 )
-
+      console.log("making search") 
+      makeSearch()
+    }, 500 )
     return () => clearTimeout(timeout)
   }, [searchValue])
-  
-  const prepareSearch = () => {
-    
-    
-    let timeout = setTimeout(() => {
-      console.log("make search")
-      
-    }, 1000 )
 
-    return () => clearTimeout(timeout)
+  
+  const makeSearch = async () => {
+    if(searchValue.length > 0){
+      const data = await fetch(`https://api.spotify.com/v1/search?q=${searchValue}&type=album,track,artist`, {
+        headers: {
+          "Authorization": "Bearer " + token
+        }
+      }).then(async data => {
+        let parsedData = await data.json();
+        setAlbumSearchResults(parsedData.albums)
+        setArtistSearchResults(parsedData.artists)
+        setTrackSearchResults(parsedData.tracks.items)
+        console.log(parsedData.tracks.items)
+        console.log(trackSearchResults)
+      })
+    }
   }
 
   if(searcherShowing) { 
@@ -36,6 +44,13 @@ const Searcher = ({ searcherShowing, hide, token,}) => {
               <div className="modal-wrapper" aria-modal aria-hidden tabIndex={-1} role="dialog">
                 <div className="modal">
                   <div className="modal-header">
+                    {(artistSearchResults || albumSearchResults || trackSearchResults) && (
+                      <div classNAme="filterSearch">
+                        <button>albums</button>
+                        <button>Artists</button>
+                        <button>tracks</button>
+                      </div>
+                    )}
                    <form >
                      <input type="text" value={searchValue} placeholder="Search Spotify..." onChange={e => {setSearchValue(e.target.value)}}/>
                    </form>
@@ -44,7 +59,21 @@ const Searcher = ({ searcherShowing, hide, token,}) => {
                     </button>
                   </div>
                   <div>
-                  HELLO WORLD 
+                  {trackSearchResults && (
+                    <div className="track-search-results">
+                       {trackSearchResults.map(song => 
+                            
+                        <p className="song">
+                          <span>{song.name} by {song.artists[0].name}</span>
+                          {/* <button onClick={() => playPlaylistWithStartPoint(currentPlaylistUri, song.track.uri)}> play </button> */}
+                         {/*  <button onClick={() => playPlaylist(currentPlaylist.uri, currentPlaylist.indexOf(song))} > play </button> */ }
+                        </p>
+                     )}
+                     </div>
+                        
+
+                    
+                  )}
                   </div>
                 </div>
               </div>
