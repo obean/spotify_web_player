@@ -45,6 +45,7 @@ const Playlister = ({ playlisterShowing, hide, token, playPlaylist, playPlaylist
               <div className="modal-wrapper" aria-modal aria-hidden tabIndex={-1} role="dialog">
                 <div className="modal">
                   <div className="modal-header">
+                    {currentPlaylist && (<button type="button" className="modal-back-button" onClick={() => setCurrentPlaylist()} aria-label="Back">back</button>)}
                     <button type="button" className="modal-close-button" data-dismiss="modal" aria-label="Close" onClick={() => {hide(); setCurrentPlaylist()}}>
                       <span aria-hidden="true">&times;</span>
                     </button>
